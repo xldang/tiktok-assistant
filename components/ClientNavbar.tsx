@@ -70,6 +70,28 @@ export default function ClientNavbar() {
           <Link href="/assets" className="text-gray-300 hover:text-white">
             Assets
           </Link>
+          {user && (
+            <Link 
+              href="/admin/videos/new" 
+              className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md text-sm transition-colors"
+            >
+              <svg 
+                className="w-4 h-4 mr-1" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth="2" 
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                ></path>
+              </svg>
+              Add
+            </Link>
+          )}
           {loading && user === null ? (
             // Only show loading state if we don't have a user cached
             <div className="text-gray-300">
