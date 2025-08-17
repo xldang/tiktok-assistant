@@ -64,12 +64,6 @@ export default function ClientNavbar() {
           TikTok Creator Site
         </Link>
         <div className="flex items-center space-x-4">
-          <Link href="/" className="text-gray-300 hover:text-white">
-            Home
-          </Link>
-          <Link href="/assets" className="text-gray-300 hover:text-white">
-            Assets
-          </Link>
           {user && (
             <Link 
               href="/admin/videos/new" 
@@ -92,6 +86,12 @@ export default function ClientNavbar() {
               Add
             </Link>
           )}
+          <Link href="/" className="text-gray-300 hover:text-white">
+            Home
+          </Link>
+          <Link href="/assets" className="text-gray-300 hover:text-white">
+            Assets
+          </Link>
           {loading && user === null ? (
             // Only show loading state if we don't have a user cached
             <div className="text-gray-300">
