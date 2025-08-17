@@ -12,7 +12,7 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",
     "@vercel/blob": "^1.1.1",
-    "next": "15.4.6",
+    "next": "14.2.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -23,8 +23,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.4.6",
+    "eslint-config-next": "14.2.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "next": "14.2.5"
+    }
   }
 }

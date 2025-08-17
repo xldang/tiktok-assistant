@@ -1,10 +1,20 @@
 import { createClient } from '@/lib/supabase/server';
+import { supabase as staticSupabase } from '@/lib/supabase/static';
 import { notFound } from 'next/navigation';
 import DownloadButton from '@/components/DownloadButton';
 
+export async function generateStaticParams() {
+  const { data: videos } = await staticSupabase.from('videos').select('slug');
+
+  return videos?.filter(video => video.slug).map(({ slug }) => ({
+    slug,
+  })) || [];
+}
+
 type Props = {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: {
+    slug: string;
+  };
 };
 
 export default async function VideoPage({ params }: Props) {
