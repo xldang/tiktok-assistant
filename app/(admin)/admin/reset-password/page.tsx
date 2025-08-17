@@ -17,10 +17,10 @@ export default function ResetPasswordPage() {
   const supabase = createClient();
 
   // Function to parse URL fragment parameters
-  const parseFragmentParams = () => {
+  const parseFragmentParams = (): Record<string, string> => {
     const fragment = window.location.hash.substring(1); // Remove the '#'
     const params = new URLSearchParams(fragment);
-    const paramMap = {};
+    const paramMap: Record<string, string> = {};
     for (const [key, value] of params) {
       paramMap[key] = value;
     }
