@@ -14,4 +14,5 @@ export async function logDownload(assetId: string) {
 
   revalidatePath(`/videos/.*`, 'page');
   revalidatePath('/assets');
+  revalidatePath('/admin/videos/.*', 'page');
 }

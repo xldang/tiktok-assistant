@@ -4,21 +4,29 @@ import { logDownload } from '@/lib/actions';
 
 type DownloadButtonProps = {
   assetId: string;
-  blobUrl: string;
+  url: string;
+  filename: string;
 };
 
-export default function DownloadButton({ assetId, blobUrl }: DownloadButtonProps) {
+export default function DownloadButton({ assetId, url, filename }: DownloadButtonProps) {
   const handleDownload = async () => {
     await logDownload(assetId);
-    window.open(blobUrl, '_blank');
+    // Create a temporary link to trigger download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <button
       onClick={handleDownload}
-      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+      className="btn-primary text-sm"
     >
-      Download
+      下载
     </button>
   );
 }

@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       request,
       onBeforeGenerateToken: async (
         pathname,
-        /* clientPayload */
+        clientPayload
       ) => {
         // ⚠️ Authenticate and authorize users before generating the token.
         const supabase = createClient();
@@ -21,10 +21,13 @@ export async function POST(request: Request): Promise<NextResponse> {
         }
 
         return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'audio/mpeg', 'audio/wav', 'text/plain'],
           tokenPayload: JSON.stringify({
             userId: user.id,
           }),
+          // Add options to handle duplicate files
+          addRandomSuffix: true, // Always add random suffix to avoid conflicts
+          allowOverwrite: false,
         };
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {

@@ -8,7 +8,9 @@ This is a full-stack application built with Next.js, Supabase, and Vercel Blob. 
 - Browse videos and their creation process.
 - Download assets like images, audio, and subtitles.
 - Filter and sort assets in the asset library.
+- Search videos by title or tags.
 - Contact the creator through a contact form.
+- Comment on videos using Giscus.
 
 ### Admin Features
 - Secure login with email and password.
@@ -16,6 +18,7 @@ This is a full-stack application built with Next.js, Supabase, and Vercel Blob. 
 - Change admin password.
 - Full CRUD (Create, Read, Update, Delete) for videos and their assets.
 - Upload files to Vercel Blob.
+- View download statistics.
 
 ## Tech Stack
 
@@ -23,6 +26,7 @@ This is a full-stack application built with Next.js, Supabase, and Vercel Blob. 
 - **Styling**: Tailwind CSS
 - **Database & Auth**: Supabase
 - **File Storage**: Vercel Blob
+- **Comment System**: Giscus
 - **Deployment**: Vercel
 
 ## Getting Started
@@ -52,7 +56,12 @@ npm install
 1.  Create a new Blob store on [Vercel](https://vercel.com/).
 2.  Get your Blob read-write token.
 
-### 5. Set up environment variables
+### 5. Set up Giscus (Optional)
+
+1.  Follow the instructions at [Giscus](https://giscus.app/) to set up comments using GitHub Discussions.
+2.  After configuring Giscus, update the Giscus component in `components/Giscus.tsx` with your repository details.
+
+### 6. Set up environment variables
 
 Create a `.env.development.local` file in the root of the project and add the following environment variables:
 
@@ -68,7 +77,7 @@ BLOB_READ_WRITE_TOKEN="your-vercel-blob-token"
 
 Replace the placeholder values with your actual credentials.
 
-### 6. Run the development server
+### 7. Run the development server
 
 ```bash
 npm run dev
@@ -78,9 +87,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The admin section is available at [http://localhost:3000/admin](http://localhost:3000/admin).
 
+## Deployment
+
+To deploy this application:
+
+1. Push your code to a GitHub repository.
+2. Connect your repository to Vercel.
+3. Set the environment variables in your Vercel project settings.
+4. Deploy!
+
 ## Future Improvements
 
-- **Giscus Comment System**: Integrate [Giscus](https://giscus.app/) for comments on the video detail pages.
 - **Advanced Analytics**: Implement more detailed analytics for asset downloads.
 - **User Roles**: Add more user roles for more complex permission management.
 - **Testing**: Add unit and integration tests.

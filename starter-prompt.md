@@ -40,81 +40,6 @@
 | 部署方式 | 创建项目 ➝ 推送到 GitHub ➝ 自动部署到 Vercel |
 
 ---
-
-## 🗂 项目结构要求（初始化建议）
-
-```
-
-/pages
-├── index.tsx                  # 首页：展示最近视频卡片
-├── videos/\[slug].tsx          # 视频详情页
-├── assets/index.tsx           # 素材库页面
-├── contact.tsx                # 联系表单页
-└── admin/
-├── login.tsx             # 管理员登录页
-├── index.tsx             # 管理后台首页（数据面板）
-├── settings.tsx          # 设置网站信息
-└── change-password.tsx   # 修改密码
-
-/components                      # 所有 UI 模块组件
-/lib
-├── supabase.ts                # Supabase 客户端
-├── vercel-blob.ts             # 文件上传逻辑封装
-├── auth.ts                    # SSR 鉴权逻辑封装
-└── analytics.ts               # 下载记录逻辑封装
-
-/styles                          # Tailwind 样式
-/public                          # 静态文件
-
-````
-
----
-
-## 🧾 数据表结构定义（Supabase SQL）
-
-### 1. videos
-```sql
-id UUID PRIMARY KEY,
-title TEXT,
-slug TEXT UNIQUE,
-tiktok_url TEXT,
-cover_image_url TEXT,
-description TEXT,
-tags TEXT[]
-````
-
-### 2. assets
-
-```sql
-id UUID PRIMARY KEY,
-video_id UUID REFERENCES videos(id),
-name TEXT,
-type TEXT, -- image/audio/srt
-blob_url TEXT,
-download_count INTEGER DEFAULT 0
-```
-
-### 3. download\_log
-
-```sql
-id UUID PRIMARY KEY,
-video_id UUID REFERENCES videos(id),
-asset_url TEXT,
-created_at TIMESTAMP DEFAULT now()
-```
-
-### 4. site\_config
-
-```sql
-id UUID PRIMARY KEY,
-site_title TEXT,
-site_subtitle TEXT,
-cover_image_url TEXT,
-updated_at TIMESTAMP DEFAULT now()
-```
-
----
-
 ## 🔐 管理员认证要求
 
 * 使用 Supabase Auth 的 email/password 登录方式
@@ -157,7 +82,7 @@ updated_at TIMESTAMP DEFAULT now()
 
 ## 📥 其他要求
 
-* 使用 `.env.development.local` 管理 Supabase/Vercel 环境变量
+* 使用 `.env.local` 管理 Supabase/Vercel 环境变量
 * 提供 README.md 文件，说明如何启动开发环境
 * 所有文件组织整洁，符合 Next.js App Router 规范
 * 所有页面必须响应式布局，兼容移动端

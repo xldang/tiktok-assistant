@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { upload } from '@vercel/blob/client';
+import { generateSlug } from '@/lib/utils';
+import Link from 'next/link';
 
 export default function NewVideoPage() {
   const router = useRouter();
@@ -15,20 +17,40 @@ export default function NewVideoPage() {
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
 
+  // Generate slug from title
+  useEffect(() => {
+    if (title) {
+      setSlug(generateSlug(title));
+    }
+  }, [title]);
+
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate slug
+    if (!slug) {
+      alert('Please enter a slug');
+      return;
+    }
 
     let coverImageUrl = '';
     if (inputFileRef.current?.files && inputFileRef.current.files.length > 0) {
       const file = inputFileRef.current.files[0];
-      const newBlob = await upload(file.name, file, {
-        access: 'public',
-        handleUploadUrl: '/api/upload',
-      });
-      coverImageUrl = newBlob.url;
+      
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+        });
+        coverImageUrl = newBlob.url;
+      } catch (error: any) {
+        console.error('Upload error:', error);
+        alert('Error uploading cover image: ' + error.message);
+        return;
+      }
     }
 
-    const { error } = await supabase.from('videos').insert([
+    const { data, error } = await supabase.from('videos').insert([
       {
         title,
         slug,
@@ -37,103 +59,131 @@ export default function NewVideoPage() {
         tags: tags.split(',').map((tag) => tag.trim()),
         cover_image_url: coverImageUrl,
       },
-    ]);
+    ]).select();
 
     if (error) {
       alert('Error adding video: ' + error.message);
+    } else if (data && data.length > 0) {
+      // Redirect to the video detail page
+      router.push(`/videos/${data[0].slug}`);
     } else {
       router.push('/admin/videos');
     }
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-8">Add New Video</h1>
-      <form onSubmit={handleAddVideo} className="max-w-lg space-y-6">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Title
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
+    <div className="p-8 pt-24">
+      <div className="flex items-center mb-6">
+        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mr-4">
+          Add New Video
+        </span>
+        <button
+          onClick={() => router.back()}
+          className="btn-secondary"
+        >
+          Back
+        </button>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-8">Add New Video</h1>
+      
+      <div className="card">
+        <div className="p-6">
+          <form onSubmit={handleAddVideo} className="space-y-6">
+            <div>
+              <label htmlFor="title" className="form-label">
+                Title
+              </label>
+              <input
+                id="title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className="form-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="slug" className="form-label">
+                Slug
+              </label>
+              <input
+                id="slug"
+                type="text"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                required
+                className="form-input"
+              />
+              <p className="text-sm text-gray-500 mt-1">This will be used in the URL. Use lowercase letters, numbers, and hyphens only.</p>
+            </div>
+            <div>
+              <label htmlFor="tiktokUrl" className="form-label">
+                TikTok URL
+              </label>
+              <input
+                id="tiktokUrl"
+                type="text"
+                value={tiktokUrl}
+                onChange={(e) => setTiktokUrl(e.target.value)}
+                required
+                className="form-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="description" className="form-label">
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                className="form-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="tags" className="form-label">
+                Tags (comma-separated)
+              </label>
+              <input
+                id="tags"
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="form-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="cover_image" className="form-label">
+                Cover Image
+              </label>
+              <input
+                id="cover_image"
+                name="file"
+                ref={inputFileRef}
+                type="file"
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+              />
+            </div>
+            <div className="flex space-x-4">
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Add Video
+              </button>
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
-            Slug
-          </label>
-          <input
-            id="slug"
-            type="text"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            required
-            className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="tiktokUrl" className="block text-sm font-medium text-gray-700">
-            TikTok URL
-          </label>
-          <input
-            id="tiktokUrl"
-            type="text"
-            value={tiktokUrl}
-            onChange={(e) => setTiktokUrl(e.target.value)}
-            required
-            className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-            Tags (comma-separated)
-          </label>
-          <input
-            id="tags"
-            type="text"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="cover_image" className="block text-sm font-medium text-gray-700">
-            Cover Image
-          </label>
-          <input
-            id="cover_image"
-            name="file"
-            ref={inputFileRef}
-            type="file"
-            className="block w-full mt-1 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-          />
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Add Video
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
