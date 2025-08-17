@@ -96,7 +96,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
         <div className="mb-8">
           <h3 className="text-lg font-medium mb-2">标签</h3>
           <div className="flex flex-wrap gap-2">
-            {video.tags.map((tag, index) => (
+            {video.tags.map((tag: string, index) => (
               <span key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">
                 {tag}
               </span>
