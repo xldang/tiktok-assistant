@@ -2,11 +2,12 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import DownloadButton from '@/components/DownloadButton';
 
-export default async function VideoPage({
-  params,
-}: {
+type Props = {
   params: { slug: string };
-}) {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function VideoPage({ params }: Props) {
   const supabase = createClient();
   const { data: video, error: videoError } = await supabase
     .from('videos')
