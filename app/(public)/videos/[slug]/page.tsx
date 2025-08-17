@@ -1,15 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-
-type VideoPageProps = {
-  params: {
-    slug: string;
-  };
-};
-
 import DownloadButton from '@/components/DownloadButton';
 
-export default async function VideoPage({ params }: VideoPageProps) {
+export default async function VideoPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const supabase = createClient();
   const { data: video, error: videoError } = await supabase
     .from('videos')
