@@ -17,4 +17,5 @@ export type Asset = {
   blob_url: string;
   download_count: number;
   created_at: string;
+  videos?: Video | null;
 };

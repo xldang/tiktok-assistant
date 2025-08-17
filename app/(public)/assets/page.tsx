@@ -70,7 +70,7 @@ export default async function AssetsPage() {
                     <div>
                       <h3 className="font-medium text-lg">{asset.name}</h3>
                       <p className="text-sm text-gray-600">
-                        来自视频: {(asset.videos as any)?.title || '未知视频'}
+                        来自视频: {asset.videos?.title || '未知视频'}
                       </p>
                     </div>
                   </div>
