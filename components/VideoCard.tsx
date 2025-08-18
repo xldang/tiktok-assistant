@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Video } from '@/lib/types';
 
 type VideoCardProps = {
@@ -10,11 +11,15 @@ export default function VideoCard({ video }: VideoCardProps) {
     <Link href={`/videos/${video.slug}`}>
       <div className="card h-full flex flex-col">
         <div className="relative">
-          <img
-            src={video.cover_image_url || '/placeholder-image.jpg'}
-            alt={video.title}
-            className="w-full h-48 object-cover"
-          />
+          <div className="w-full h-48 relative">
+            <Image
+              src={video.cover_image_url || '/placeholder-image.jpg'}
+              alt={video.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
         </div>
         <div className="p-5 flex-grow flex flex-col">

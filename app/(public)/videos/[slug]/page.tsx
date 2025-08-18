@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Asset, Video } from '@/lib/types';
 import Link from 'next/link';
+import Image from 'next/image';
 import DownloadButton from '@/components/DownloadButton';
 import Giscus from '@/components/Giscus';
 import { generateThumbnailUrl, isImage } from '@/lib/utils';
@@ -112,11 +113,13 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
             {assets.map((asset) => (
               <div key={asset.id} className="border rounded-lg p-4 flex items-center">
                 {isImage(asset.type) ? (
-                  <div className="flex-shrink-0 mr-4">
-                    <img 
+                  <div className="flex-shrink-0 mr-4 w-24 h-24 relative">
+                    <Image 
                       src={generateThumbnailUrl(asset.blob_url, 200)} 
                       alt={asset.name} 
-                      className="w-24 h-24 object-cover rounded-md"
+                      fill
+                      className="object-cover rounded-md"
+                      sizes="100px"
                     />
                   </div>
                 ) : (

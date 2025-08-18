@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Asset } from '@/lib/types';
 import DownloadButton from '@/components/DownloadButton';
+import Image from 'next/image';
 import { generateThumbnailUrl, isImage } from '@/lib/utils';
 
 export default async function AssetsPage() {
@@ -57,11 +58,15 @@ export default async function AssetsPage() {
                 <div className="p-5">
                   <div className="flex items-center space-x-4 mb-4">
                     {isImage(asset.type) ? (
-                      <img 
-                        src={generateThumbnailUrl(asset.blob_url, 150)} 
-                        alt={asset.name} 
-                        className="w-20 h-20 object-cover rounded-md"
-                      />
+                      <div className="w-20 h-20 relative">
+                        <Image 
+                          src={generateThumbnailUrl(asset.blob_url, 150)} 
+                          alt={asset.name} 
+                          fill
+                          className="object-cover rounded-md"
+                          sizes="80px"
+                        />
+                      </div>
                     ) : (
                       <div className="w-20 h-20 flex items-center justify-center bg-gray-200 rounded-md">
                         <span className="text-xs text-gray-600">File</span>
