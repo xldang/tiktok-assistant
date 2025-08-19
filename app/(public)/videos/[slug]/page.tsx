@@ -3,6 +3,7 @@ import { Asset, Video } from '@/lib/types';
 import Link from 'next/link';
 import DownloadButton from '@/components/DownloadButton';
 import AssetImage from '@/components/AssetImage';
+import Cusdis from '@/components/Cusdis';
 
 export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
   const supabase = createClient();
@@ -111,7 +112,16 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
       
       <div className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">评论</h2>
-        <p className="text-gray-500">评论功能已移除</p>
+        {process.env.NEXT_PUBLIC_CUSDIS_APP_ID ? (
+          <Cusdis
+            appId={process.env.NEXT_PUBLIC_CUSDIS_APP_ID}
+            pageId={video.id}
+            pageTitle={video.title}
+            pageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/videos/${video.slug}`}
+          />
+        ) : (
+          <p className="text-gray-500">评论功能暂未配置</p>
+        )}
       </div>
     </div>
   );
