@@ -1,9 +1,10 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client'; // Use client client
 import { revalidatePath } from 'next/cache';
 
 export async function logDownload(assetId: string) {
+  // Create a new client client (will be anonymous if no session)
   const supabase = createClient();
 
   // Increment download_count
