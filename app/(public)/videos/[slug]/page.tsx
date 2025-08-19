@@ -1,10 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { Asset, Video } from '@/lib/types';
 import Link from 'next/link';
-import Image from 'next/image';
 import DownloadButton from '@/components/DownloadButton';
 import Giscus from '@/components/Giscus';
-import { generateThumbnailUrl, isImage } from '@/lib/utils';
+import AssetImage from '@/components/AssetImage';
 
 export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
   const supabase = createClient();
@@ -95,28 +94,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
           <div className="space-y-4">
             {assets.map((asset) => (
               <div key={asset.id} className="border rounded-lg p-4 flex items-center">
-                {isImage(asset.type) ? (
-                  <div className="flex-shrink-0 mr-4 w-24 h-24 relative">
-                    <Image 
-                      src={generateThumbnailUrl(asset.blob_url, 200)} 
-                      alt={asset.name} 
-                      fill
-                      className="object-cover rounded-md"
-                      sizes="100px"
-                      onError={(e) => {
-                        // Fallback to original URL if thumbnail generation fails
-                        const target = e.target as HTMLImageElement;
-                        if (target.src !== asset.blob_url) {
-                          target.src = asset.blob_url;
-                        }
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex-shrink-0 mr-4 w-24 h-24 flex items-center justify-center bg-gray-200 rounded-md">
-                    <span className="text-xs text-gray-600">File</span>
-                  </div>
-                )}
+                <AssetImage asset={asset} />
                 <div className="flex-grow">
                   <h3 className="font-medium">{asset.name}</h3>
                   <p className="text-sm text-gray-500 capitalize">{asset.type}</p>
