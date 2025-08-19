@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import VideoCard from '@/components/VideoCard';
+import VideoCardWithMenu from '@/components/VideoCardWithMenu';
 import Sidebar from '@/components/Sidebar';
 import { Video } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
@@ -11,7 +11,17 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const supabase = createClient();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsAdmin(!!user);
+    };
+
+    checkAdminStatus();
+  }, [supabase]);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -108,7 +118,7 @@ export default function HomePage() {
         ) : displayVideos.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
+              <VideoCardWithMenu key={video.id} video={video} isAdmin={isAdmin} />
             ))}
           </div>
         ) : searchQuery.trim() ? (
