@@ -38,13 +38,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
     console.error('Error fetching assets:', assetsError);
   }
 
-  // Extract TikTok video ID from URL
-  const getTikTokVideoId = (url: string) => {
-    const match = url.match(/\/video\/(\d+)/);
-    return match ? match[1] : null;
-  };
-
-  const tiktokVideoId = getTikTokVideoId(video.tiktok_url);
+  
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -74,17 +68,6 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
           >
             View on TikTok
           </a>
-        </div>
-      )}
-      
-      {tiktokVideoId && (
-        <div className="mb-8">
-          <iframe 
-            src={`https://www.tiktok.com/embed/v2/${tiktokVideoId}`} 
-            className="w-full aspect-[9/16] max-w-sm mx-auto"
-            frameBorder="0"
-            allowFullScreen
-          ></iframe>
         </div>
       )}
       
@@ -120,6 +103,13 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                       fill
                       className="object-cover rounded-md"
                       sizes="100px"
+                      onError={(e) => {
+                        // Fallback to original URL if thumbnail generation fails
+                        const target = e.target as HTMLImageElement;
+                        if (target.src !== asset.blob_url) {
+                          target.src = asset.blob_url;
+                        }
+                      }}
                     />
                   </div>
                 ) : (
