@@ -3,9 +3,6 @@ import { Asset, Video } from '@/lib/types';
 import Link from 'next/link';
 import DownloadButton from '@/components/DownloadButton';
 import AssetImage from '@/components/AssetImage';
-import CommentForm from '@/components/Comments';
-import { CommentsList } from '@/components/Comments';
-import { getCommentsForVideo } from '@/lib/queries/comments';
 
 export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
   const supabase = createClient();
@@ -38,11 +35,6 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
   if (assetsError) {
     console.error('Error fetching assets:', assetsError);
   }
-
-  // Fetch comments for this video
-  const comments = await getCommentsForVideo(video.id);
-
-  
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -113,12 +105,6 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
         ) : (
           <p>暂无素材可供下载</p>
         )}
-      </div>
-      
-      <div className="mt-12">
-        <h2 className="text-2xl font-semibold mb-4">评论</h2>
-        <CommentForm videoId={video.id} />
-        <CommentsList comments={comments} />
       </div>
     </div>
   );
