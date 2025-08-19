@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { Asset, Video } from '@/lib/types';
 import Link from 'next/link';
 import DownloadButton from '@/components/DownloadButton';
-import Giscus from '@/components/Giscus';
 import AssetImage from '@/components/AssetImage';
 
 export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
@@ -112,20 +111,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
       
       <div className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">评论</h2>
-        {/* 
-          To use Giscus, you need to:
-          1. Set up a GitHub discussion repository
-          2. Configure Giscus at https://giscus.app/
-          3. Replace the placeholder values below with your actual Giscus configuration
-        */}
-        <Giscus
-          repo="your-github-username/your-repo-name"
-          repoId="your-repo-id"
-          category="General"
-          categoryId="your-category-id"
-          mapping="pathname"
-          theme="light"
-        />
+        <p className="text-gray-500">评论功能已移除</p>
       </div>
     </div>
   );
