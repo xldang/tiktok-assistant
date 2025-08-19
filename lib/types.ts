@@ -19,3 +19,12 @@ export type Asset = {
   created_at: string;
   videos?: Video | null;
 };
+
+export type Comment = {
+  id: string;
+  video_id: string;
+  name: string;
+  email: string;
+  content: string;
+  created_at: string;
+};
